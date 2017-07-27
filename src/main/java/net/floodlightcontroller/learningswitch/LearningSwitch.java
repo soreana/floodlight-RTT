@@ -652,16 +652,14 @@ public class LearningSwitch
 
     @Override
     public Map<Class<? extends IFloodlightService>, IFloodlightService> getServiceImpls() {
-        Map<Class<? extends IFloodlightService>, IFloodlightService> m =
-                new HashMap<Class<? extends IFloodlightService>, IFloodlightService>();
+        Map<Class<? extends IFloodlightService>, IFloodlightService> m = new HashMap<>();
         m.put(ILearningSwitchService.class, this);
         return m;
     }
 
     @Override
     public Collection<Class<? extends IFloodlightService>> getModuleDependencies() {
-        Collection<Class<? extends IFloodlightService>> l =
-                new ArrayList<Class<? extends IFloodlightService>>();
+        Collection<Class<? extends IFloodlightService>> l = new ArrayList<>();
         l.add(IFloodlightProviderService.class);
         l.add(IDebugCounterService.class);
         l.add(IRestApiService.class);
@@ -670,13 +668,11 @@ public class LearningSwitch
 
     @Override
     public void init(FloodlightModuleContext context) throws FloodlightModuleException {
-        macVlanToSwitchPortMap = new ConcurrentHashMap<IOFSwitch, Map<MacVlanPair, OFPort>>();
+        macVlanToSwitchPortMap = new ConcurrentHashMap<>();
         floodlightProviderService = context.getServiceImpl(IFloodlightProviderService.class);
         debugCounterService = context.getServiceImpl(IDebugCounterService.class);
         restApiService = context.getServiceImpl(IRestApiService.class);
         iofSwitchService = context.getServiceImpl(IOFSwitchService.class);
-
-
     }
 
     @Override

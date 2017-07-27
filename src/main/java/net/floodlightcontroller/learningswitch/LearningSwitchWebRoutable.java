@@ -28,6 +28,7 @@ public class LearningSwitchWebRoutable implements RestletRoutable {
     public Restlet getRestlet(Context context) {
         Router router = new Router(context);
         router.attach("/table/{switch}/json", LearningSwitchTable.class);
+        router.attach("/start/{switchUpdateTime}/{betweenRoundTime}", StartChangeResource.class);
         return router;
     }
 
