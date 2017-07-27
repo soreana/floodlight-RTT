@@ -4,6 +4,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,6 +17,8 @@ import java.util.Map;
  * Created by sinakashipazha on 2017/7/27 AD.
  */
 public class UpPorts {
+    protected static Logger log = LoggerFactory.getLogger(UpPorts.class);
+
     private static UpPorts myInstance = new UpPorts();
 
     private Map<Long, ArrayList<Integer>> portMap = new HashMap<>();
@@ -59,6 +63,7 @@ public class UpPorts {
             throw new PortIsAlreadyUpException();
 
         portMap.get(switchId).add(portNumber);
+        log.info("make port " + portNumber + " of switch s" + switchId + " up");
     }
 
     public void makeLinkDown(long switchId,int portNumber) throws PortIsAlreadyDownException {
@@ -66,5 +71,6 @@ public class UpPorts {
             throw new PortIsAlreadyDownException();
 
         portMap.get(switchId).remove((Integer) portNumber);
+        log.info("make port " + portNumber + " of switch s" + switchId + " down");
     }
 }

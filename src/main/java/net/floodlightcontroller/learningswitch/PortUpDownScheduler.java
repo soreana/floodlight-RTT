@@ -1,5 +1,6 @@
 package net.floodlightcontroller.learningswitch;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import java.util.Date;
 import java.util.Iterator;
@@ -35,20 +36,27 @@ public class PortUpDownScheduler extends TimerTask {
         time.schedule(this,0,period);
     }
 
+    private long extractSwitchId(String switchName){
+        return Long.parseLong(switchName.substring(switchName.length()-1));
+    }
 
     @Override
     public void run() {
         count--;
 
-        // todo change one switch
-        Date now = new Date();
-        System.out.println("Time is :" + now); // Display current time
-        System.out.println(iterator.next());
+        String switchName = (String) iterator.next();
+        long switchId = extractSwitchId(switchName);
+        JSONObject sw = (JSONObject) round.get(switchName);
 
+        for(Object current : (JSONArray) sw.get("up"))
+            UpPorts.getMyInstance().makeLinkUp(switchId,Integer.parseInt(String.valueOf(current)));
+
+        for(Object current : (JSONArray) sw.get("down"))
+            UpPorts.getMyInstance().makeLinkDown(switchId,Integer.parseInt(String.valueOf(current)));
 
         if(count == 0){
             nextRoundExecutor.start();
-            System.out.println("End timer");
+            System.out.println("End round.");
             time.cancel();
             time.purge();
         }
