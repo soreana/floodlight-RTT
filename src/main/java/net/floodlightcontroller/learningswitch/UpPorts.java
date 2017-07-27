@@ -23,12 +23,14 @@ public class UpPorts {
 
     private Map<Long, ArrayList<Integer>> portMap = new HashMap<>();
 
+    private JSONObject topo ;
+
     private UpPorts(){
         JSONParser parser = new JSONParser();
 
         try {
-            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("src/main/resources/topology/topo.json"));
-            JSONObject switches = (JSONObject) jsonObject.get("switches");
+            topo = (JSONObject) parser.parse(new FileReader("src/main/resources/topology/topo.json"));
+            JSONObject switches = (JSONObject) topo.get("switches");
 
             for (int i = 1; i <= switches.size(); i++) {
                 ArrayList<Integer> ports = new ArrayList<>();
@@ -64,6 +66,10 @@ public class UpPorts {
 
         portMap.get(switchId).add(portNumber);
         log.info("make port " + portNumber + " of switch s" + switchId + " up");
+    }
+
+    public JSONArray getRounds(){
+        return (JSONArray) topo.get("rounds");
     }
 
     public void makeLinkDown(long switchId,int portNumber) throws PortIsAlreadyDownException {

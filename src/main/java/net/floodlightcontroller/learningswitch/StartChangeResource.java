@@ -2,11 +2,6 @@ package net.floodlightcontroller.learningswitch;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import net.floodlightcontroller.core.web.ControllerSwitchesResource;
-import net.floodlightcontroller.staticentry.IStaticEntryPusherService;
 
 import net.floodlightcontroller.staticentry.web.SFPEntryMap;
 import org.json.simple.JSONArray;
@@ -34,16 +29,10 @@ public class StartChangeResource extends ServerResource {
         log.info("switchUpdateTime set to " + switchUpdateTime);
         log.info("betweenRoundTime set to " + betweenRoundTime);
 
-        try {
-            JSONParser parser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("src/main/resources/topology/topo.json"));
-            JSONArray rounds = (JSONArray) jsonObject.get("rounds");
-            new RoundScheduler(rounds, betweenRoundTime, switchUpdateTime);
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
+        JSONArray rounds = UpPorts.getMyInstance().getRounds();
+        new RoundScheduler(rounds, betweenRoundTime, switchUpdateTime);
 
-        setStatus(Status.SUCCESS_OK,"Start Changing topology.");
+        setStatus(Status.SUCCESS_OK, "Start Changing topology.");
         return null;
     }
 }
