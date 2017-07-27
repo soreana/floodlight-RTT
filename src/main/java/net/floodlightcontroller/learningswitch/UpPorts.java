@@ -42,15 +42,29 @@ public class UpPorts {
         }
     }
 
-    public ArrayList<Integer> getSwitchesUpPorts(Long id){
+    public ArrayList<Integer> getSwitchesUpPorts(Long switchId){
         // todo clone array and return that array
         ArrayList<Integer> temp = new ArrayList<>();
-        for (Integer current: portMap.get(id))
+        for (Integer current: portMap.get(switchId))
             temp.add(current.intValue());
         return temp;
     }
 
     public static UpPorts getMyInstance(){
         return myInstance;
+    }
+
+    public void makeLinkUp(long switchId,int portNumber) throws PortIsAlreadyUpException {
+        if (portMap.get(switchId).contains(portNumber))
+            throw new PortIsAlreadyUpException();
+
+        portMap.get(switchId).add(portNumber);
+    }
+
+    public void makeLinkDown(long switchId,int portNumber) throws PortIsAlreadyDownException {
+        if (! portMap.get(switchId).contains(portNumber))
+            throw new PortIsAlreadyDownException();
+
+        portMap.get(switchId).remove((Integer) portNumber);
     }
 }
