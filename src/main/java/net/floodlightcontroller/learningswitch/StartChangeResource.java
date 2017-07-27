@@ -1,5 +1,7 @@
 package net.floodlightcontroller.learningswitch;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,10 +9,11 @@ import net.floodlightcontroller.core.web.ControllerSwitchesResource;
 import net.floodlightcontroller.staticentry.IStaticEntryPusherService;
 
 import net.floodlightcontroller.staticentry.web.SFPEntryMap;
-import org.projectfloodlight.openflow.protocol.OFMessage;
-import org.projectfloodlight.openflow.types.DatapathId;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.restlet.data.Status;
-import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 import org.slf4j.Logger;
@@ -25,11 +28,20 @@ public class StartChangeResource extends ServerResource {
     @Post()
     public SFPEntryMap ListStaticFlowEntries() {
 
-        String switchUpdateTime = (String) getRequestAttributes().get("switchUpdateTime");
-        String betweenRoundTime = (String) getRequestAttributes().get("betweenRoundTime");
+        long switchUpdateTime = Long.parseLong((String) getRequestAttributes().get("switchUpdateTime"));
+        long betweenRoundTime = Long.parseLong((String) getRequestAttributes().get("betweenRoundTime"));
 
         log.info("switchUpdateTime set to " + switchUpdateTime);
         log.info("betweenRoundTime set to " + betweenRoundTime);
+
+        try {
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("src/main/resources/topology/topo.json"));
+            JSONArray rounds = (JSONArray) jsonObject.get("rounds");
+            new RoundScheduler(rounds, betweenRoundTime, switchUpdateTime);
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
 
         setStatus(Status.SUCCESS_OK,"Start Changing topology.");
         return null;
