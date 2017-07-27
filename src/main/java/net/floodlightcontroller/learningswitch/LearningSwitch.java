@@ -97,9 +97,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -251,29 +248,29 @@ public class LearningSwitch
 //			broadcastPorts = Collections.singleton(OFPort.FLOOD);
 //		}
 
-        JSONParser parser = new JSONParser();
-        Map<Long, ArrayList<Integer>> portMap = new HashMap<>();
+//        JSONParser parser = new JSONParser();
+//        Map<Long, ArrayList<Integer>> portMap = new HashMap<>();
+//
+//        try {
+//            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("src/main/resources/topology/topo.json"));
+//            JSONObject switches = (JSONObject) jsonObject.get("switches");
+//
+//            for (int i = 1; i <= switches.size(); i++) {
+//                ArrayList<Integer> ports = new ArrayList<>();
+//                JSONArray availablePorts = (JSONArray) switches.get("s" + i);
+//
+//                for (Object availablePort : availablePorts)
+//                    ports.add(((Long) availablePort).intValue());
+//
+//                portMap.put((long) i, ports);
+//
+//            }
+//
+//        } catch (IOException | ParseException e) {
+//            e.printStackTrace();
+//        }
 
-        try {
-            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("src/main/resources/topology/topo.json"));
-            JSONObject switches = (JSONObject) jsonObject.get("switches");
-
-            for (int i = 1; i <= switches.size(); i++) {
-                ArrayList<Integer> ports = new ArrayList<>();
-                JSONArray availablePorts = (JSONArray) switches.get("s" + i);
-
-                for (Object availablePort : availablePorts)
-                    ports.add(((Long) availablePort).intValue());
-
-                portMap.put((long) i, ports);
-
-            }
-
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
-
-        ArrayList<Integer> validPorts = portMap.get(sw.getId().getLong());
+        ArrayList<Integer> validPorts = UpPorts.getMyInstance().getSwitchesUpPorts(sw.getId().getLong());
         for (OFPortDesc pd : sw.getPorts()) {
             OFPort p = pd.getPortNo();
 
