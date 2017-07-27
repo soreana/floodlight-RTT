@@ -2,12 +2,6 @@ package net.floodlightcontroller.learningswitch;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,16 +33,12 @@ public class RoundScheduler extends TimerTask {
 
     @Override
     public void run() {
-        // todo stop this scheduler
         time.cancel();
         time.purge();
 
-        System.out.println(count);
-        // todo if rounds ends stop this scheduler
         if (count == rounds.size())
             return;
 
-        // todo start PortUpDownScheduler to change switches
         new PortUpDownScheduler((JSONObject) rounds.get(count), switchUpdateTime, new RoundScheduler(this));
 
         count++;
@@ -56,13 +46,5 @@ public class RoundScheduler extends TimerTask {
 
     public void start() {
         time.schedule(this, betweenRoundTime, betweenRoundTime);
-    }
-
-    public static void main(String[] args) throws InterruptedException, IOException, ParseException {
-        JSONParser parser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("src/main/resources/topology/topo.json"));
-        JSONArray rounds = (JSONArray) jsonObject.get("rounds");
-        new RoundScheduler(rounds, 3000,1000 );
-        Thread.sleep(1000);
     }
 }
