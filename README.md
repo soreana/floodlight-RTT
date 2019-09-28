@@ -9,7 +9,7 @@ In this version of Floodlight controller I modified LearningSwitch module to upd
     2. **rounds** shows each step. For example in sample topo.json, in first round, port two of switch s1 will be down and port three will be up.
 3. Run Floodlight controller with `java -jar target/floodlight.jar`
 4. Connect swithes.
-5. Call http://<FLOODLIGHT_IP>:8080//wm/learningswitch/start/{switchUpdateTime}/{betweenRoundTime}
+5. Call `http://<FLOODLIGHT_IP>:8080//wm/learningswitch/start/{switchUpdateTime}/{betweenRoundTime}`
     1. **switchUpdateTime** represent delay to modify each switch routing table.
     2. **betweenRoundTime** represent delay between each round. 
 
